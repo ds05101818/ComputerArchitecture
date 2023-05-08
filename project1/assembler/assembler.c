@@ -75,12 +75,12 @@ int findLabel(char *label){
     exit(1);
 }
 
-int check(char *str){
-    if (isNumber(str)){
-        return atoi(str);
+int checkReg(char *reg){
+    if (isNumber(reg)){
+        return atoi(reg);
     }
     else{
-        return findLabel(str);
+        return findLabel(reg);
     }
 }
 
@@ -98,9 +98,9 @@ int bitSize(int num, int size){
 }
 
 int makeRtype(int opcode, char *arg0, char *arg1, char *arg2){
-    int regA = check(arg0);
-    int regB = check(arg1);
-    int dest = check(arg2);
+    int regA = checkReg(arg0);
+    int regB = checkReg(arg1);
+    int dest = checkReg(arg2);
     int unused = 0;
 
     if (bitSize(regA,3) && bitSize(regB,3) && bitSize(dest,3)){
@@ -113,9 +113,9 @@ int makeRtype(int opcode, char *arg0, char *arg1, char *arg2){
 }
 
 int makeItype(int pc, int opcode, char *arg0, char *arg1, char *arg2){
-    int regA = check(arg0);
-    int regB = check(arg1);
-    int address = check(arg2);
+    int regA = checkReg(arg0);
+    int regB = checkReg(arg1);
+    int address = checkReg(arg2);
     int unused = 0;
     int bitmask = 0x0000FFFF;
 
@@ -135,8 +135,8 @@ int makeItype(int pc, int opcode, char *arg0, char *arg1, char *arg2){
 }
 
 int makeJtype(int opcode, char *arg0, char *arg1){
-    int regA = check(arg0);
-    int regB = check(arg1);
+    int regA = checkReg(arg0);
+    int regB = checkReg(arg1);
     int unused = 0;
     if (bitSize(regA,3) && bitSize(regB,3)){
         return ((unused << 31) | (opcode << 22) | (regA << 19) | (regB << 16));
@@ -290,7 +290,7 @@ int readAndParse(FILE *inFilePtr, char *label, char *opcode, char *arg0,
         /* reached end of file */
         return (0);
     }
-    /* check for line too long (by looking for a \n) */
+    /* checkReg for line too long (by looking for a \n) */
     if (strchr(line, '\n') == NULL)
     {
         /* line too long */
